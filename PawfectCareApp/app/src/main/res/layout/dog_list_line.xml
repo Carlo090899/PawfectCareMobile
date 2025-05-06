@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="16dp"
+    android:layout_margin="8dp"
+    android:gravity="center_vertical"
+    android:clipToPadding="false"
+    android:elevation="4dp"
+    android:backgroundTint="@android:color/holo_orange_light"
+    android:backgroundTintMode="src_in"
+    android:shape="rectangle"
+    android:background="@drawable/dog_item_background">
+
+    <ImageView
+        android:id="@+id/dog_image"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:scaleType="centerCrop"
+        android:background="@drawable/circle_mask"
+        android:clipToOutline="true"
+        android:outlineProvider="background"
+        android:elevation="2dp"
+        android:padding="0dp"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/dog_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="Santa"
+            android:textColor="@android:color/white"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/birthdate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="Feb 10, 2024"
+            android:textColor="@android:color/white"
+            android:textSize="19sp" />
+
+        <TextView
+            android:id="@+id/gender"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="Male"
+            android:textColor="@android:color/white"
+            android:textSize="19sp"/>
+
+    </LinearLayout>
+
+
+</LinearLayout>

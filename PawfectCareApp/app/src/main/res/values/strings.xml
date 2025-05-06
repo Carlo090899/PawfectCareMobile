@@ -1,0 +1,78 @@
+<resources>
+    <string name="app_name">PawfectCare</string>
+    <!-- res/values/strings.xml -->
+    <string name="terms_and_conditions_text">
+    Terms and Conditions for the Pawfect Care Mobile Application\n
+    Last updated: May 1, 2025\n\n
+    Please read these Terms and Conditions (“Terms”) carefully before registering or using the Pawfect Care mobile application (“App”), operated by The Perfect Paws Organization. By ticking the boxes and tapping “Register,” you agree to be bound by these Terms and our Privacy Policy.\n\n
+
+    1. Definitions\n
+    • App: The Pawfect Care mobile application.\n
+    • Organization: The Perfect Paws Organization, a private dog-care entity.\n
+    • User Roles:\n
+      - Administrator: Full control over user access, settings, and uploads.\n
+      - Owner: Assigns tasks, manages profiles, feeding charts, uploads, and chat.\n
+      - Caretaker: Views tasks, profiles, feeding charts, and participates in chat.\n
+    • User Data: Includes personal info, task logs, dog profiles, charts, images, and chat.\n\n
+
+    2. Eligibility and Registration\n
+    • Only authorized Administrators, Owners, and Caretakers may register.\n
+    • You must provide accurate and updated information.\n\n
+
+    3. App Functionality (Scope)\n
+    • Task Management: Owners assign, Caretakers track.\n
+    • Centralized Reference: Dog profiles, feeding charts, task images.\n
+    • Access Control: Role-based restrictions on uploads and access.\n
+    • Feeding Chart Module: Interface for feeding instruction updates.\n
+    • In-App Communication: Text-only chat between Owners and Caretakers.\n\n
+
+    4. Feature Limitations\n
+    • No audio/video uploads.\n
+    • No calling features.\n
+    • Static image uploads only (e.g., JPG, PNG).\n\n
+
+    5. Data Collection, Use and Privacy\n
+    • Data collected only for core functions.\n
+    • Compliant with the Data Privacy Act of 2012 (RA 10173).\n
+    • No data sharing without explicit consent (unless legally required).\n\n
+
+    6. Confidentiality and Security\n
+    • User Data is securely stored and role-restricted.\n
+    • Keep login credentials secure; report unauthorized access.\n\n
+
+    7. User Responsibilities\n
+    • Use only for organization tasks.\n
+    • No malware or illicit uploads.\n
+    • Respect privacy and data boundaries.\n\n
+
+    8. Intellectual Property\n
+    • All App content belongs to The Perfect Paws Organization.\n
+    • No reproduction/distribution without written consent.\n\n
+
+    9. Limitation of Liability\n
+    • No warranties on App availability or fitness.\n
+    • Not liable for indirect or consequential damages.\n\n
+
+    10. Termination\n
+    • We may revoke access for violations.\n
+    • User Data access ends upon termination.\n\n
+
+    11. Amendments\n
+    • Terms may be updated; continued use means acceptance.\n\n
+
+    12. Governing Law and Disputes\n
+    • Governed by Philippine laws.\n
+    • Disputes handled in Batangas City courts.\n\n
+
+    Registration Checklist:\n
+    • I have read and agree to the Terms and Conditions.\n
+    • I understand the Privacy Policy and my rights under RA 10173.\n
+    • I consent to data collection and use.\n
+    • I acknowledge my user role.\n
+    • I understand feature limitations.\n
+    • I consent to receive notifications and updates.\n\n
+
+    Contact: perfectpawsph@gmail.com
+</string>
+
+</resources>
