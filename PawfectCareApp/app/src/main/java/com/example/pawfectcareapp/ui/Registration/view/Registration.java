@@ -57,12 +57,12 @@ public class Registration extends AppCompatActivity {
 //        binding.registrationOtp.otpCard.setBackgroundColor(Color.TRANSPARENT);
 //        binding.registrationOtp.otpLayout.setBackgroundColor(Color.parseColor("#80FFFFFF"));
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(
-                this,
-                android.R.layout.simple_dropdown_item_1line,
-                role
-        );
-        binding.registrationForm.role.setAdapter(adapter);
+//        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+//                this,
+//                android.R.layout.simple_dropdown_item_1line,
+//                role
+//        );
+//        binding.registrationForm.role.setAdapter(adapter);
 
         binding.registrationOtp.otp1.addTextChangedListener(new GenericTextWatcher(binding.registrationOtp.otp1, binding.registrationOtp.otp2, null));
         binding.registrationOtp.otp2.addTextChangedListener(new GenericTextWatcher(binding.registrationOtp.otp2, binding.registrationOtp.otp3, binding.registrationOtp.otp1));
@@ -77,7 +77,7 @@ public class Registration extends AppCompatActivity {
             public void onClick(View v) {
                 if (!binding.registrationForm.fullname.getText().toString().equals("") || !binding.registrationForm.fullname.getText().toString().equals(null) &&
                         !binding.registrationForm.contactNo.getText().toString().equals("") || !binding.registrationForm.contactNo.getText().toString().equals(null) &&
-                        !binding.registrationForm.password.getText().toString().equals("") || !binding.registrationForm.contactNo.getText().toString().equals(null) &&
+                        !binding.registrationForm.password.getText().toString().equals("") || !binding.registrationForm.password.getText().toString().equals(null) &&
                         !binding.registrationForm.confirmPassword.getText().toString().equals("") || !binding.registrationForm.confirmPassword.getText().toString().equals(null) &&
                         !binding.registrationForm.email.getText().toString().equals("") || !binding.registrationForm.email.getText().toString().equals(null) &&
                         !checkedText.equals("")) {
@@ -91,7 +91,7 @@ public class Registration extends AppCompatActivity {
                         model.setConfirm_password(binding.registrationForm.confirmPassword.getText().toString());
                         model.setEmail(binding.registrationForm.email.getText().toString());
                         model.setGender(checkedText);
-                        model.setRole(binding.registrationForm.role.getText().toString());
+//                        model.setRole(binding.registrationForm.role.getText().toString());
                         AlertsAndLoaders alert = new AlertsAndLoaders();
                         alert.showAlert(4, "Are you sure you want to proceed?", "This information cannot be undone", Registration.this, saveSignUp);
 
