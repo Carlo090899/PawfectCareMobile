@@ -60,12 +60,12 @@ public class Registration extends AppCompatActivity {
 //        binding.registrationOtp.otpCard.setBackgroundColor(Color.TRANSPARENT);
 //        binding.registrationOtp.otpLayout.setBackgroundColor(Color.parseColor("#80FFFFFF"));
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(
-                this,
-                android.R.layout.simple_dropdown_item_1line,
-                role
-        );
-        binding.registrationForm.role.setAdapter(adapter);
+//        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+//                this,
+//                android.R.layout.simple_dropdown_item_1line,
+//                role
+//        );
+//        binding.registrationForm.role.setAdapter(adapter);
 
         binding.registrationOtp.otp1.addTextChangedListener(new GenericTextWatcher(binding.registrationOtp.otp1, binding.registrationOtp.otp2, null));
         binding.registrationOtp.otp2.addTextChangedListener(new GenericTextWatcher(binding.registrationOtp.otp2, binding.registrationOtp.otp3, binding.registrationOtp.otp1));
