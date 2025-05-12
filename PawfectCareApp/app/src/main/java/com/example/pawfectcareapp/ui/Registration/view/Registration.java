@@ -57,6 +57,16 @@ public class Registration extends AppCompatActivity {
         binding.registrationForm.registrationCard.setBackgroundColor(Color.parseColor("#80FFFFFF"));
         binding.registrationForm.registrationLayout.setBackgroundColor(Color.parseColor("#80FFFFFF"));
 
+//        binding.registrationOtp.otpCard.setBackgroundColor(Color.TRANSPARENT);
+//        binding.registrationOtp.otpLayout.setBackgroundColor(Color.parseColor("#80FFFFFF"));
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                this,
+                android.R.layout.simple_dropdown_item_1line,
+                role
+        );
+        binding.registrationForm.role.setAdapter(adapter);
+
         binding.registrationOtp.otp1.addTextChangedListener(new GenericTextWatcher(binding.registrationOtp.otp1, binding.registrationOtp.otp2, null));
         binding.registrationOtp.otp2.addTextChangedListener(new GenericTextWatcher(binding.registrationOtp.otp2, binding.registrationOtp.otp3, binding.registrationOtp.otp1));
         binding.registrationOtp.otp3.addTextChangedListener(new GenericTextWatcher(binding.registrationOtp.otp3, binding.registrationOtp.otp4, binding.registrationOtp.otp2));
@@ -76,6 +86,7 @@ public class Registration extends AppCompatActivity {
                         !checkedText.equals("")) {
                     if (binding.registrationForm.password.getText().toString().equals(binding.registrationForm.confirmPassword.getText().toString())) {
                         layout_id = 2;
+                        viewModel.toShowLayout(binding, layout_id);
                         model = new RegistrationModel();
                         model.setFullname(binding.registrationForm.fullname.getText().toString());
                         model.setContactNumber(binding.registrationForm.contactNo.getText().toString());
