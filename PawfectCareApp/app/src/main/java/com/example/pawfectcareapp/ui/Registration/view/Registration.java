@@ -4,6 +4,7 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
@@ -18,7 +19,9 @@ import com.example.pawfectcareapp.R;
 import com.example.pawfectcareapp.Utils.FunctionInterface;
 import com.example.pawfectcareapp.Utils.GenericTextWatcher;
 import com.example.pawfectcareapp.databinding.ActivityRegistrationBinding;
+import com.example.pawfectcareapp.ui.FeedChart.view.FoodChart;
 import com.example.pawfectcareapp.ui.Login.view.LoginPage;
+import com.example.pawfectcareapp.ui.MainMenu.MainMenu;
 import com.example.pawfectcareapp.ui.Registration.model.RegistrationModel;
 import com.example.pawfectcareapp.ui.Registration.viewModel.RegistrationViewModel;
 
@@ -31,7 +34,7 @@ public class Registration extends AppCompatActivity {
     boolean is_clicked = false;
     int layout_id = 1;
 
-    String [] role = {"Admin", "Employee"};
+//    String [] role = {"Admin", "Employee"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,16 +57,6 @@ public class Registration extends AppCompatActivity {
         binding.registrationForm.registrationCard.setBackgroundColor(Color.parseColor("#80FFFFFF"));
         binding.registrationForm.registrationLayout.setBackgroundColor(Color.parseColor("#80FFFFFF"));
 
-//        binding.registrationOtp.otpCard.setBackgroundColor(Color.TRANSPARENT);
-//        binding.registrationOtp.otpLayout.setBackgroundColor(Color.parseColor("#80FFFFFF"));
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(
-                this,
-                android.R.layout.simple_dropdown_item_1line,
-                role
-        );
-        binding.registrationForm.role.setAdapter(adapter);
-
         binding.registrationOtp.otp1.addTextChangedListener(new GenericTextWatcher(binding.registrationOtp.otp1, binding.registrationOtp.otp2, null));
         binding.registrationOtp.otp2.addTextChangedListener(new GenericTextWatcher(binding.registrationOtp.otp2, binding.registrationOtp.otp3, binding.registrationOtp.otp1));
         binding.registrationOtp.otp3.addTextChangedListener(new GenericTextWatcher(binding.registrationOtp.otp3, binding.registrationOtp.otp4, binding.registrationOtp.otp2));
@@ -83,7 +76,6 @@ public class Registration extends AppCompatActivity {
                         !checkedText.equals("")) {
                     if (binding.registrationForm.password.getText().toString().equals(binding.registrationForm.confirmPassword.getText().toString())) {
                         layout_id = 2;
-                        viewModel.toShowLayout(binding, layout_id);
                         model = new RegistrationModel();
                         model.setFullname(binding.registrationForm.fullname.getText().toString());
                         model.setContactNumber(binding.registrationForm.contactNo.getText().toString());
@@ -91,9 +83,10 @@ public class Registration extends AppCompatActivity {
                         model.setConfirm_password(binding.registrationForm.confirmPassword.getText().toString());
                         model.setEmail(binding.registrationForm.email.getText().toString());
                         model.setGender(checkedText);
-                        model.setRole(binding.registrationForm.role.getText().toString());
+//                        model.setRole(binding.registrationForm.role.getText().toString());
                         AlertsAndLoaders alert = new AlertsAndLoaders();
                         alert.showAlert(4, "Are you sure you want to proceed?", "This information cannot be undone", Registration.this, saveSignUp);
+
 
 
                     }else{
@@ -141,6 +134,42 @@ public class Registration extends AppCompatActivity {
             }
         });
 
+        binding.registrationOtp.Resend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                viewModel.resendCode(Registration.this, Registration.this, binding.registrationForm.email.getText().toString());
+            }
+        });
+
+        binding.registrationOtp.Back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                layout_id = 1;
+                viewModel.deleteRegistration(binding, layout_id, binding.registrationForm.email.getText().toString());
+            }
+        });
+
+    }
+
+    @SuppressLint("MissingSuperCall")
+    @Override
+    public void onBackPressed() {
+        handleBackButton();
+    }
+
+    public void handleBackButton() {
+        if (layout_id == 1) {
+            Intent in = new Intent(Registration.this, MainMenu.class);
+            startActivity(in);
+        } else {
+            layout_id = 1;
+            model = new RegistrationModel();
+            viewModel.deleteRegistration(binding, layout_id, binding.registrationForm.email.getText().toString());
+
+
+//            viewModel.toShowLayout(binding, layout_id);
+        }
+
     }
 
     private String getOTP() {
@@ -173,6 +202,26 @@ public class Registration extends AppCompatActivity {
         public void perform() {
             layout_id = 2;
             viewModel.toShowLayout(binding,layout_id);
+        }
+    };
+
+    public FunctionInterface.Function backToRegistrationForm = new FunctionInterface.Function() {
+        @RequiresApi(api = Build.VERSION_CODES.O)
+        @Override
+        public void perform() {
+            layout_id = 1;
+
+            model = new RegistrationModel();
+            binding.registrationForm.fullname.setText("");
+            binding.registrationForm.contactNo.setText("");
+            binding.registrationForm.password.setText("");
+            binding.registrationForm.confirmPassword.setText("");
+            binding.registrationForm.email.setText("");
+            binding.registrationForm.radioFemale.setChecked(false);
+            binding.registrationForm.radioMale.setChecked(false);
+
+            viewModel.toShowLayout(binding,layout_id);
+
         }
     };
 

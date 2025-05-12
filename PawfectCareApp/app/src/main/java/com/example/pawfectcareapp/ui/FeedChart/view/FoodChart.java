@@ -96,7 +96,7 @@ public class FoodChart extends AppCompatActivity {
         foodList = new ArrayList<>();
         util = new SharedPref();
 
-        if (Integer.valueOf(util.readPrefString(FoodChart.this, util.ROLE_ID)) != 1) {
+        if (Integer.parseInt(util.readPrefString(FoodChart.this, SharedPref.ROLE_ID)) != 1) {
             binding.foodChart.addFood.setVisibility(GONE);
         } else {
             binding.foodChart.addFood.setVisibility(View.VISIBLE);
@@ -307,7 +307,7 @@ public class FoodChart extends AppCompatActivity {
         try {
             binding.foodChart.listView.setLayoutManager(new LinearLayoutManager(FoodChart.this, LinearLayoutManager.VERTICAL, false));
 
-            FoodListAdapter adapter = new FoodListAdapter(FoodChart.this, R.layout.food_list_line, foodList, binding, FoodChart.this, Integer.valueOf(util.readPrefString(FoodChart.this, util.ROLE_ID)));
+            FoodListAdapter adapter = new FoodListAdapter(FoodChart.this, R.layout.food_list_line, foodList, binding, FoodChart.this, Integer.valueOf(util.readPrefString(FoodChart.this, SharedPref.ROLE_ID)));
             binding.foodChart.listView.setAdapter(adapter);
 
         } catch (Exception e) {

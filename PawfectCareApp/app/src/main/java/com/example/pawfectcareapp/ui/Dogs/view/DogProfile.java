@@ -84,7 +84,7 @@ public class DogProfile extends AppCompatActivity {
     ActivityDogProfileBinding binding;
     AlertDialog dialog = null;
     ImageView picture, album_pic;
-    TextInputEditText birthdate;
+    TextInputEditText birthdate, editBirthdate;
     static final int REQUEST_IMAGE_CAPTURE = 1;
     private Uri imageUri;
     private List<Uri> uris;
@@ -107,6 +107,8 @@ public class DogProfile extends AppCompatActivity {
     SharedPref util;
     boolean for_album = false;
     int album_id = 0;
+    boolean is_edit = false;
+    boolean is_edit_album = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -149,10 +151,12 @@ public class DogProfile extends AppCompatActivity {
             binding.dogList.addDog.setVisibility(GONE);
             binding.dogDetails.addAlbum.setVisibility(GONE);
             binding.albumContent.captureImage.setVisibility(GONE);
+            binding.dogDetails.editDetails.setVisibility(GONE);
         } else {
             binding.dogList.addDog.setVisibility(View.VISIBLE);
             binding.dogDetails.addAlbum.setVisibility(View.VISIBLE);
             binding.albumContent.captureImage.setVisibility(View.VISIBLE);
+            binding.dogDetails.editDetails.setVisibility(View.VISIBLE);
         }
 
         viewModel.getDogList(DogProfile.this, DogProfile.this, binding);
@@ -236,7 +240,97 @@ public class DogProfile extends AppCompatActivity {
             }
         });
 
+        binding.dogDetails.editDetails.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showEditDogDetailsDialog();
+            }
+        });
 
+        binding.albumContent.editIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                is_edit_album = false;
+                showAddAlbumDialog();
+            }
+        });
+
+        binding.albumContent.deleteIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertsAndLoaders alert = new AlertsAndLoaders();
+                alert.showAlert(4, "Are you sure?","You want to delete this album?", DogProfile.this,deleteAlbum);
+            }
+        });
+
+    }
+
+    public void showEditDogDetailsDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(DogProfile.this);
+        View mview = getLayoutInflater().inflate(R.layout.edit_dog_dialog, null);
+
+        TextInputEditText dog_name, notes;
+        CardView btn_cancel;
+        LinearLayout save_details;
+        ImageView datePicker;
+
+        dog_name = mview.findViewById(R.id.edit_dog_name);
+        editBirthdate = mview.findViewById(R.id.edit_birthdate);
+        datePicker = mview.findViewById(R.id.date_picker);
+        notes = mview.findViewById(R.id.edit_notes);
+
+        btn_cancel = mview.findViewById(R.id.btn_cancel);
+        save_details = mview.findViewById(R.id.save_details);
+
+        dog_name.setText(selectedDog.getDogName());
+        editBirthdate.setText(selectedDog.getBirthdate());
+        notes.setText(selectedDog.getNotes());
+
+        is_edit = true;
+        datePicker.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDatePicker();
+            }
+        });
+
+
+        save_details.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertsAndLoaders alertsAndLoaders = new AlertsAndLoaders();
+                    if (!dog_name.getText().toString().trim().equals("") && !birthdate.getText().toString().trim().equals("")) {
+
+                        dogModel.setDogName(dog_name.getText().toString().trim());
+                        dogModel.setBirthdate(editBirthdate.getText().toString().trim());
+                        dogModel.setNotes(notes.getText().toString().trim());
+
+                        viewModel.editDogDetails(DogProfile.this, DogProfile.this, dogModel, selectedDog.getId());
+
+                        dialog.cancel();
+
+                    } else {
+                        alertsAndLoaders.showAlert(2, "", "Please Insert dog name and birthdate", DogProfile.this, null);
+                    }
+
+
+            }
+        });
+
+
+        btn_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                is_edit = false;
+                dialog.cancel();
+            }
+        });
+
+        builder.setView(mview);
+        dialog = builder.create();
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
     }
 
     public void showCaptureAlbum() {
@@ -296,17 +390,29 @@ public class DogProfile extends AppCompatActivity {
         btn_cancel = mview.findViewById(R.id.btn_cancel);
         save_album = mview.findViewById(R.id.save_album);
 
+        if(is_edit_album){
+            album_name.setText(selectedAlbum.getAlbumName());
+        }
 
         save_album.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 AlertsAndLoaders alertsAndLoaders = new AlertsAndLoaders();
 
-                if (!album_name.getText().toString().equals("")) {
-                    alertsAndLoaders.showAlert(4, "Are you sure?", "You want to save this album to your list?", DogProfile.this, saveAlbum);
-                } else {
-                    alertsAndLoaders.showAlert(2, "", "Please insert album name to proceed", DogProfile.this, null);
+                if(is_edit_album){
+                    if (!album_name.getText().toString().equals("")) {
+                        alertsAndLoaders.showAlert(4, "Are you sure?", "You want to change the name of this album?", DogProfile.this, saveAlbum);
+                    } else {
+                        alertsAndLoaders.showAlert(2, "", "Please insert album name to proceed", DogProfile.this, null);
+                    }
+                }else{
+                    if (!album_name.getText().toString().equals("")) {
+                        alertsAndLoaders.showAlert(4, "Are you sure?", "You want to save this album to your list?", DogProfile.this, saveAlbum);
+                    } else {
+                        alertsAndLoaders.showAlert(2, "", "Please insert album name to proceed", DogProfile.this, null);
+                    }
                 }
+
 
             }
         });
@@ -395,7 +501,7 @@ public class DogProfile extends AppCompatActivity {
                         dialog.cancel();
 
                     } else {
-                        alertsAndLoaders.showAlert(2, "", "Please select cargo condition...", DogProfile.this, null);
+                        alertsAndLoaders.showAlert(2, "", "Please Insert dog name, gender and birthdate", DogProfile.this, null);
                     }
                 } else {
                     alertsAndLoaders.showAlert(2, "", "Please take an image...", DogProfile.this, null);
@@ -509,7 +615,11 @@ public class DogProfile extends AppCompatActivity {
                 selectedDate.set(year, month, dayOfMonth);
 
                 SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault());
-                birthdate.setText(dateFormat.format(selectedDate.getTime()));
+                if (is_edit) {
+                    editBirthdate.setText(dateFormat.format(selectedDate.getTime()));
+                } else {
+                    birthdate.setText(dateFormat.format(selectedDate.getTime()));
+                }
             }
         }, currentDate.get(Calendar.YEAR), currentDate.get(Calendar.MONTH), currentDate.get(Calendar.DAY_OF_MONTH)).show();
     }
@@ -549,6 +659,8 @@ public class DogProfile extends AppCompatActivity {
         @RequiresApi(api = Build.VERSION_CODES.O)
         @Override
         public void perform() {
+            is_edit_album = false;
+            is_edit = false;
             dialog.cancel();
             viewModel.getAlbum(DogProfile.this, DogProfile.this, binding, selectedDog.getId());
         }
@@ -558,7 +670,20 @@ public class DogProfile extends AppCompatActivity {
         @RequiresApi(api = Build.VERSION_CODES.O)
         @Override
         public void perform() {
-            viewModel.saveAlbumName(DogProfile.this, DogProfile.this, selectedDog.getId(), album_name.getText().toString());
+            if(is_edit_album){
+                viewModel.editAlbumName(DogProfile.this, DogProfile.this, selectedAlbum.getId(), album_name.getText().toString());
+            }else{
+                viewModel.saveAlbumName(DogProfile.this, DogProfile.this, selectedDog.getId(), album_name.getText().toString());
+            }
+
+        }
+    };
+
+    public FunctionInterface.Function deleteAlbum = new FunctionInterface.Function() {
+        @RequiresApi(api = Build.VERSION_CODES.O)
+        @Override
+        public void perform() {
+            viewModel.deleteAlbum(DogProfile.this, DogProfile.this,  selectedAlbum.getId());
         }
     };
 
@@ -645,6 +770,14 @@ public class DogProfile extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
             return "";
+        }
+    }
+
+    public void showImageInFullScreen(String imageUrl) {
+        if (imageUrl != null) {
+            layout_id = 4;
+            viewModel.toShowLayout(binding, layout_id);
+            Glide.with(this).load(imageUrl).into(binding.activityFullScreenImage.fullScreenImage);
         }
     }
 

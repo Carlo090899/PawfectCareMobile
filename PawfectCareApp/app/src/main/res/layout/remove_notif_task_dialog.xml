@@ -97,7 +97,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
                         android:lineSpacingExtra="-5sp"
-                        android:text="Confirm this Cargo"
+                        android:text="Follow Up task"
                         android:textColor="#FFFFFF" />
                 </LinearLayout>
 

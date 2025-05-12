@@ -26,6 +26,7 @@ public class SharedPref {
     public static final String FULLNAME = "com.example.pawfectcareapp.fullname";
     public static final String GENDER = "com.example.pawfectcareapp.gender";
     public static final boolean IS_ACTIVE = false;
+    public static final boolean IS_READ_TC = false;
     public static final String EMAIL  = "com.example.pawfectcareapp.email";
     public static final String ROLE_ID  = "com.example.pawfectcareapp.role_id";
     public static final String TOKEN  = "com.example.pawfectcareapp.token";
@@ -49,6 +50,10 @@ public class SharedPref {
         return sharedPref.getString(key, null);
     }
 
+//    public boolean readPrefBoolean(Context context, String key) {
+//        SharedPreferences sharedPref = context.getSharedPreferences(PREFS_KEY, Context.MODE_PRIVATE);
+//        return sharedPref.getBoolean(key, false); // default is false if key doesn't exist
+//    }
 
     public int readPrefInt(Context context, int key){
         SharedPreferences sharedPref = context.getSharedPreferences(PREFS_KEY, Context.MODE_PRIVATE);
@@ -98,12 +103,41 @@ public class SharedPref {
         edit.apply();
     }
 
-    public SharedPreferences getEncryptedPrefs(Context context) throws GeneralSecurityException, IOException {
-        MasterKey masterKey=new MasterKey.Builder(context,MasterKey.DEFAULT_MASTER_KEY_ALIAS)
-                .setKeyScheme(MasterKey.KeyScheme.AES256_GCM).build();
-        return EncryptedSharedPreferences.create(context,SECURED_PREFS_KEY,masterKey,EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
-                EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM);
+    public SharedPreferences getEncryptedPrefs(Context context) {
+        MasterKey masterKey;
+        try {
+            masterKey = new MasterKey.Builder(context, MasterKey.DEFAULT_MASTER_KEY_ALIAS)
+                    .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+                    .build();
+        } catch (GeneralSecurityException | IOException e) {
+            throw new RuntimeException("Failed to get or create MasterKey", e);
+        }
+
+        try {
+            return EncryptedSharedPreferences.create(
+                    context,
+                    SECURED_PREFS_KEY,
+                    masterKey,
+                    EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+                    EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+            );
+        } catch (GeneralSecurityException | IOException e) {
+            // 🧹 Key is likely corrupted → delete prefs and retry
+            context.deleteSharedPreferences(SECURED_PREFS_KEY);
+            try {
+                return EncryptedSharedPreferences.create(
+                        context,
+                        SECURED_PREFS_KEY,
+                        masterKey,
+                        EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+                        EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+                );
+            } catch (GeneralSecurityException | IOException ex) {
+                throw new RuntimeException("Re-creating EncryptedSharedPreferences failed after cleanup", ex);
+            }
+        }
     }
+
 
     Bitmap generateQRCode(String text) throws WriterException {
         int width = 500;

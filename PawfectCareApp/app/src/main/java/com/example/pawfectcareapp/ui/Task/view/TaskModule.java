@@ -68,7 +68,7 @@ public class TaskModule extends AppCompatActivity {
         employee_arr = viewModel.getEmployees(TaskModule.this, TaskModule.this, binding);
         SharedPref util = new SharedPref();
 
-        if(Integer.valueOf(util.readPrefString(TaskModule.this, util.ROLE_ID)) == 2){
+        if(Integer.valueOf(util.readPrefString(TaskModule.this, SharedPref.ROLE_ID)) == 2){
             binding.taskList.addTask.setVisibility(View.GONE);
         }else{
             binding.taskList.addTask.setVisibility(View.VISIBLE);
@@ -117,7 +117,7 @@ public class TaskModule extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 selectedTask = listOfSearchedTask.get(position);
                 SharedPref util = new SharedPref();
-                if(Integer.valueOf(util.readPrefString(TaskModule.this, util.ROLE_ID)) == 1){
+                if(Integer.valueOf(util.readPrefString(TaskModule.this, SharedPref.ROLE_ID)) == 1){
                     showFollowUpDialog();
                 }else{
                     task_status = "COMPLETED";
@@ -189,7 +189,8 @@ public class TaskModule extends AppCompatActivity {
         follow_up.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                AlertsAndLoaders alertsAndLoaders = new AlertsAndLoaders();
+                alertsAndLoaders.showAlert(4,"Are you sure?", "You want to permanently delete this task?", TaskModule.this,followUpTask);
             }
         });
 
@@ -228,7 +229,7 @@ public class TaskModule extends AppCompatActivity {
         @RequiresApi(api = Build.VERSION_CODES.O)
         @Override
         public void perform() {
-            dialog.cancel();
+//            dialog.cancel();
             layout_id = 1;
             viewModel.toShowLayout(binding, layout_id);
             viewModel.getTask(binding, TaskModule.this, TaskModule.this);
@@ -248,6 +249,13 @@ public class TaskModule extends AppCompatActivity {
         @Override
         public void perform() {
             viewModel.deleteTask(TaskModule.this, TaskModule.this, selectedTask.getId());
+        }
+    };
+    public FunctionInterface.Function followUpTask = new FunctionInterface.Function() {
+        @RequiresApi(api = Build.VERSION_CODES.O)
+        @Override
+        public void perform() {
+            viewModel.followUptask(TaskModule.this, TaskModule.this, selectedTask.getId());
         }
     };
 

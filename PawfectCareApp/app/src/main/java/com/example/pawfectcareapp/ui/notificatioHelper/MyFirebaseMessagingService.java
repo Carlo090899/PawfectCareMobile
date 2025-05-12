@@ -46,8 +46,11 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         sendNotification(remoteMessage);
         Map<String,String> data=remoteMessage.getData();
         SharedPref utils=new SharedPref();
-        if(remoteMessage.getNotification().getBody().contains("GATE-IN")) {
+
+        if(remoteMessage.getNotification().getBody().contains("ASSIGNED to")) {
             utils.writePrefString(MyFirebaseMessagingService.this, BuildConfig.HAS_NOTIFICATION_ASSIGN_TASK, "true");
+        } else if (remoteMessage.getNotification().getBody().contains("tagged as COMPLETED")) {
+            utils.writePrefString(MyFirebaseMessagingService.this, BuildConfig.HAS_NOTIFICATION_COMPLETE_TASK, "true");
         }
 
     }
@@ -59,11 +62,11 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         String content = data.get("content");
 
         NotificationManager notificationManager=(NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        String NOTIFICATION_CHANNEL_ID="AscentDev";
+        String NOTIFICATION_CHANNEL_ID="PawfectCare";
 
         if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.O){
             @SuppressLint("WrongConstant") NotificationChannel notificationChannel=new NotificationChannel(NOTIFICATION_CHANNEL_ID,"PawfectCare Notification",NotificationManager.IMPORTANCE_MAX);
-            notificationChannel.setDescription("AscentDev channel for app test FCM");
+            notificationChannel.setDescription("PawfectCare channel for app test FCM");
             notificationChannel.enableLights(true);
             notificationChannel.setLightColor(Color.RED);
             //notificationChannel.setVibrationPattern(new long[]{0,1000,500,1000});

@@ -9,6 +9,7 @@ import com.example.pawfectcareapp.API.ServiceGenerator;
 import com.example.pawfectcareapp.BuildConfig;
 import com.example.pawfectcareapp.Common.AlertsAndLoaders;
 import com.example.pawfectcareapp.Utils.SharedPref;
+import com.example.pawfectcareapp.databinding.ActivityRegistrationBinding;
 import com.example.pawfectcareapp.ui.Login.model.UserModel;
 import com.example.pawfectcareapp.ui.Login.model.UserResponse;
 import com.example.pawfectcareapp.ui.Login.view.LoginPage;
@@ -47,11 +48,12 @@ public class LoginViewModel {
                                 user = resp.getData();
                                 SharedPref sharedPref = new SharedPref();
 
-                                sharedPref.writePrefString(context, sharedPref.USER_ID, String.valueOf(user.getId()));
-                                sharedPref.writePrefString(context, sharedPref.FULLNAME, String.valueOf(user.getFullname()));
-                                sharedPref.writePrefString(context, sharedPref.ROLE_ID, String.valueOf(user.getRoleId()));
-                                sharedPref.writePrefString(context, sharedPref.GENDER, String.valueOf(user.getGender()));
-                                sharedPref.secureWritePrefBoolean(context, String.valueOf(sharedPref.IS_ACTIVE), user.isActive());
+                                sharedPref.writePrefString(context, SharedPref.USER_ID, String.valueOf(user.getId()));
+                                sharedPref.writePrefString(context, SharedPref.FULLNAME, String.valueOf(user.getFullname()));
+                                sharedPref.writePrefString(context, SharedPref.ROLE_ID, String.valueOf(user.getRoleId()));
+                                sharedPref.writePrefString(context, SharedPref.GENDER, String.valueOf(user.getGender()));
+                                sharedPref.secureWritePrefBoolean(context, String.valueOf(SharedPref.IS_ACTIVE), user.isActive());
+                                sharedPref.secureWritePrefBoolean(context, String.valueOf(SharedPref.IS_READ_TC), user.isReadTc());
                                 Intent intent = new Intent(context, MainMenu.class);
                                 intent.putExtra("from_login", true);
                                 activity.startActivity(intent);
@@ -78,5 +80,15 @@ public class LoginViewModel {
             e.printStackTrace();
         }
     }
+
+
+
+
+//    private String getOTP(ActivityRegistrationBinding binding) {
+//        return binding.registrationOtp.otp1.getText().toString() +
+//                binding.registrationOtp.otp2.getText().toString() +
+//                binding.registrationOtp.otp3.getText().toString() +
+//                binding.registrationOtp.otp4.getText().toString();
+//    }
 
 }

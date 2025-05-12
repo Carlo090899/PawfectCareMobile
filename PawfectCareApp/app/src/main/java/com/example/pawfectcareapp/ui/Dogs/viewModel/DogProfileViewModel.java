@@ -44,40 +44,86 @@ public class DogProfileViewModel {
     List<DogModel> dogList;
     List<AlbumImagesModel> imageList;
     List<DogAlbumModel> albumList;
-    public void saveDogDetails(DogProfile activity, Context context, DogModel model, List<Uri> uri){
+
+    public void saveDogDetails(DogProfile activity, Context context, DogModel model, List<Uri> uri) {
+        AlertsAndLoaders alert = new AlertsAndLoaders();
+        dialog = alert.showAlert(3, "Please wait", "", context, null);
         resp = new DogProfileResponse();
-        ApiCall services = ServiceGenerator.createService(ApiCall.class, BuildConfig.API_UNAME,BuildConfig.API_PASS);
+        ApiCall services = ServiceGenerator.createService(ApiCall.class, BuildConfig.API_UNAME, BuildConfig.API_PASS);
         Call<DogProfileResponse> call = services.saveDogDetails(getFilePart(uri, context), model.getDogName(), model.getBirthdate(), model.getGender(), model.getNotes());
         call.enqueue(new Callback<DogProfileResponse>() {
             @Override
             public void onResponse(Call<DogProfileResponse> call, Response<DogProfileResponse> response) {
                 try {
+                    dialog.cancel();
                     if (response.code() == 200) {
                         resp = response.body();
                         if (resp.getStatusCode() == 200) {
                             AlertsAndLoaders alertsAndLoaders = new AlertsAndLoaders();
                             alertsAndLoaders.showAlert(0, "", "Dog was Successfully Registered", context, activity.goToDogList);
-                        }else{
-                            AlertsAndLoaders alert =  new AlertsAndLoaders();
-                            alert.showAlert(2,"", resp.getMessage(), context, null);
+                        } else {
+                            AlertsAndLoaders alert = new AlertsAndLoaders();
+                            alert.showAlert(2, "", resp.getMessage(), context, null);
                         }
                     }
 
 
                 } catch (Exception e) {
+                    dialog.cancel();
                     e.printStackTrace();
                 }
             }
 
             @Override
             public void onFailure(Call<DogProfileResponse> call, Throwable t) {
+                dialog.cancel();
                 Log.e("Error: ", t.getMessage());
             }
         });
 
     }
 
-    public void getDogList(DogProfile activity, Context context, ActivityDogProfileBinding binding){
+    public void editDogDetails(DogProfile activity, Context context, DogModel model, int dog_id) {
+        AlertsAndLoaders alert = new AlertsAndLoaders();
+        dialog = alert.showAlert(3, "Please wait", "", context, null);
+        resp = new DogProfileResponse();
+        ApiCall services = ServiceGenerator.createService(ApiCall.class, BuildConfig.API_UNAME, BuildConfig.API_PASS);
+        Call<DogProfileResponse> call = services.editDogDetails(dog_id, model.getDogName(), model.getBirthdate(), model.getNotes());
+        call.enqueue(new Callback<DogProfileResponse>() {
+            @Override
+            public void onResponse(Call<DogProfileResponse> call, Response<DogProfileResponse> response) {
+                try {
+                    dialog.cancel();
+                    if (response.code() == 200) {
+                        resp = response.body();
+                        if (resp.getStatusCode() == 200) {
+                            AlertsAndLoaders alertsAndLoaders = new AlertsAndLoaders();
+                            alertsAndLoaders.showAlert(0, "", "Dog was Successfully Edited", context, activity.goToDogList);
+                        } else {
+                            AlertsAndLoaders alert = new AlertsAndLoaders();
+                            alert.showAlert(2, "", resp.getMessage(), context, null);
+                        }
+                    }
+
+
+                } catch (Exception e) {
+                    dialog.cancel();
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<DogProfileResponse> call, Throwable t) {
+                dialog.cancel();
+                Log.e("Error: ", t.getMessage());
+            }
+        });
+
+    }
+
+    public void getDogList(DogProfile activity, Context context, ActivityDogProfileBinding binding) {
+        AlertsAndLoaders alert = new AlertsAndLoaders();
+        dialog = alert.showAlert(3, "Please wait", "", context, null);
         resp = new DogProfileResponse();
         ApiCall services = ServiceGenerator.createService(ApiCall.class, BuildConfig.API_UNAME, BuildConfig.API_PASS);
         Call<DogProfileResponse> call = services.getDogList();
@@ -85,6 +131,7 @@ public class DogProfileViewModel {
             @Override
             public void onResponse(Call<DogProfileResponse> call, Response<DogProfileResponse> response) {
                 try {
+                    dialog.cancel();
                     dogList = new ArrayList<>();
                     if (response.code() == 200) {
                         resp = response.body();
@@ -108,52 +155,135 @@ public class DogProfileViewModel {
 
 
                 } catch (Exception e) {
+                    dialog.cancel();
                     e.printStackTrace();
                 }
             }
 
             @Override
             public void onFailure(Call<DogProfileResponse> call, Throwable t) {
+                dialog.cancel();
                 Log.e("Error: ", t.getMessage());
             }
         });
     }
 
-    public void saveAlbumName(DogProfile activity, Context context, int dog_id, String album_name){
+    public void saveAlbumName(DogProfile activity, Context context, int dog_id, String album_name) {
+        AlertsAndLoaders alert = new AlertsAndLoaders();
+        dialog = alert.showAlert(3, "Please wait", "", context, null);
         resp = new DogProfileResponse();
         SharedPref util = new SharedPref();
-        ApiCall services = ServiceGenerator.createService(ApiCall.class, BuildConfig.API_UNAME,BuildConfig.API_PASS);
+        ApiCall services = ServiceGenerator.createService(ApiCall.class, BuildConfig.API_UNAME, BuildConfig.API_PASS);
         Call<DogProfileResponse> call = services.saveAlbumName(dog_id, album_name, Integer.valueOf(util.readPrefString(context, util.USER_ID)));
         call.enqueue(new Callback<DogProfileResponse>() {
             @Override
             public void onResponse(Call<DogProfileResponse> call, Response<DogProfileResponse> response) {
                 try {
+                    dialog.cancel();
                     if (response.code() == 200) {
                         resp = response.body();
                         if (resp.getStatusCode() == 200) {
                             AlertsAndLoaders alertsAndLoaders = new AlertsAndLoaders();
                             alertsAndLoaders.showAlert(0, "", "Album was successfully saved", context, activity.goToDogDetails);
-                        }else{
-                            AlertsAndLoaders alert =  new AlertsAndLoaders();
-                            alert.showAlert(2,"", resp.getMessage(), context, null);
+                        } else {
+                            AlertsAndLoaders alert = new AlertsAndLoaders();
+                            alert.showAlert(2, "", resp.getMessage(), context, null);
                         }
                     }
 
 
                 } catch (Exception e) {
+                    dialog.cancel();
                     e.printStackTrace();
                 }
             }
 
             @Override
             public void onFailure(Call<DogProfileResponse> call, Throwable t) {
+                dialog.cancel();
+                Log.e("Error: ", t.getMessage());
+            }
+        });
+
+    }
+    public void editAlbumName(DogProfile activity, Context context, int album_id, String album_name) {
+        AlertsAndLoaders alert = new AlertsAndLoaders();
+        dialog = alert.showAlert(3, "Please wait", "", context, null);
+        resp = new DogProfileResponse();
+        SharedPref util = new SharedPref();
+        ApiCall services = ServiceGenerator.createService(ApiCall.class, BuildConfig.API_UNAME, BuildConfig.API_PASS);
+        Call<DogProfileResponse> call = services.editAlbumName(album_id, album_name);
+        call.enqueue(new Callback<DogProfileResponse>() {
+            @Override
+            public void onResponse(Call<DogProfileResponse> call, Response<DogProfileResponse> response) {
+                try {
+                    dialog.cancel();
+                    if (response.code() == 200) {
+                        resp = response.body();
+                        if (resp.getStatusCode() == 200) {
+                            AlertsAndLoaders alertsAndLoaders = new AlertsAndLoaders();
+                            alertsAndLoaders.showAlert(0, "", "Album was successfully edit", context, activity.goToDogDetails);
+                        } else {
+                            AlertsAndLoaders alert = new AlertsAndLoaders();
+                            alert.showAlert(2, "", resp.getMessage(), context, null);
+                        }
+                    }
+
+
+                } catch (Exception e) {
+                    dialog.cancel();
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<DogProfileResponse> call, Throwable t) {
+                dialog.cancel();
                 Log.e("Error: ", t.getMessage());
             }
         });
 
     }
 
-    public void getAlbum(DogProfile activity, Context context, ActivityDogProfileBinding binding, int dog_id){
+    public void deleteAlbum(DogProfile activity, Context context, int album_id) {
+        AlertsAndLoaders alert = new AlertsAndLoaders();
+        dialog = alert.showAlert(3, "Please wait", "", context, null);
+        resp = new DogProfileResponse();
+        ApiCall services = ServiceGenerator.createService(ApiCall.class, BuildConfig.API_UNAME, BuildConfig.API_PASS);
+        Call<DogProfileResponse> call = services.deleteAlbum(album_id);
+        call.enqueue(new Callback<DogProfileResponse>() {
+            @Override
+            public void onResponse(Call<DogProfileResponse> call, Response<DogProfileResponse> response) {
+                try {
+                    dialog.cancel();
+                    if (response.code() == 200) {
+                        resp = response.body();
+                        if (resp.getStatusCode() == 200) {
+                            AlertsAndLoaders alertsAndLoaders = new AlertsAndLoaders();
+                            alertsAndLoaders.showAlert(0, "", "Album was successfully deleted", context, activity.goToDogDetails);
+                        } else {
+                            AlertsAndLoaders alert = new AlertsAndLoaders();
+                            alert.showAlert(2, "", resp.getMessage(), context, null);
+                        }
+                    }
+
+
+                } catch (Exception e) {
+                    dialog.cancel();
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<DogProfileResponse> call, Throwable t) {
+                dialog.cancel();
+                Log.e("Error: ", t.getMessage());
+            }
+        });
+
+    }
+
+    public void getAlbum(DogProfile activity, Context context, ActivityDogProfileBinding binding, int dog_id) {
         resp = new DogProfileResponse();
         ApiCall services = ServiceGenerator.createService(ApiCall.class, BuildConfig.API_UNAME, BuildConfig.API_PASS);
         Call<DogProfileResponse> call = services.getAlbum(dog_id);
@@ -195,41 +325,46 @@ public class DogProfileViewModel {
         });
     }
 
-    public void saveAlbumImage(DogProfile activity, Context context, List<Uri> uri, int dog_album_id){
+    public void saveAlbumImage(DogProfile activity, Context context, List<Uri> uri, int dog_album_id) {
+        AlertsAndLoaders alert = new AlertsAndLoaders();
+        dialog = alert.showAlert(3, "Please wait", "", context, null);
         resp = new DogProfileResponse();
         SharedPref util = new SharedPref();
-        ApiCall services = ServiceGenerator.createService(ApiCall.class, BuildConfig.API_UNAME,BuildConfig.API_PASS);
-        Call<DogProfileResponse> call = services.saveAlbumImage(getFilePart(uri, context), dog_album_id,  Integer.valueOf(util.readPrefString(context, util.USER_ID)));
+        ApiCall services = ServiceGenerator.createService(ApiCall.class, BuildConfig.API_UNAME, BuildConfig.API_PASS);
+        Call<DogProfileResponse> call = services.saveAlbumImage(getFilePart(uri, context), dog_album_id, Integer.valueOf(util.readPrefString(context, util.USER_ID)));
         call.enqueue(new Callback<DogProfileResponse>() {
             @Override
             public void onResponse(Call<DogProfileResponse> call, Response<DogProfileResponse> response) {
                 try {
+                    dialog.cancel();
                     if (response.code() == 200) {
                         resp = response.body();
                         if (resp.getStatusCode() == 200) {
                             AlertsAndLoaders alertsAndLoaders = new AlertsAndLoaders();
                             alertsAndLoaders.showAlert(0, "", "Image was Successfully Saved", context, activity.goToAlbumList);
-                        }else{
-                            AlertsAndLoaders alert =  new AlertsAndLoaders();
-                            alert.showAlert(2,"", resp.getMessage(), context, null);
+                        } else {
+                            AlertsAndLoaders alert = new AlertsAndLoaders();
+                            alert.showAlert(2, "", resp.getMessage(), context, null);
                         }
                     }
 
 
                 } catch (Exception e) {
+                    dialog.cancel();
                     e.printStackTrace();
                 }
             }
 
             @Override
             public void onFailure(Call<DogProfileResponse> call, Throwable t) {
+                dialog.cancel();
                 Log.e("Error: ", t.getMessage());
             }
         });
 
     }
 
-    public void getImageList(DogProfile activity, Context context, ActivityDogProfileBinding binding, int dog_album_id){
+    public void getImageList(DogProfile activity, Context context, ActivityDogProfileBinding binding, int dog_album_id) {
         resp = new DogProfileResponse();
         ApiCall services = ServiceGenerator.createService(ApiCall.class, BuildConfig.API_UNAME, BuildConfig.API_PASS);
         Call<DogProfileResponse> call = services.getAlbumImage(dog_album_id);
@@ -271,13 +406,12 @@ public class DogProfileViewModel {
     }
 
 
-
-
     public void toShowLayout(ActivityDogProfileBinding binding, int layout_id) {
 
         binding.dogList.getRoot().setVisibility(View.GONE);
         binding.dogDetails.getRoot().setVisibility(View.GONE);
         binding.albumContent.getRoot().setVisibility(View.GONE);
+        binding.activityFullScreenImage.getRoot().setVisibility(View.GONE);
         binding.headerLayout.getRoot().setVisibility(View.VISIBLE);
         if (layout_id == 0) {
 
@@ -285,8 +419,10 @@ public class DogProfileViewModel {
             binding.dogList.getRoot().setVisibility(View.VISIBLE);
         } else if (layout_id == 2) {
             binding.dogDetails.getRoot().setVisibility(View.VISIBLE);
-        }else if(layout_id == 3){
+        } else if (layout_id == 3) {
             binding.albumContent.getRoot().setVisibility(View.VISIBLE);
+        } else if (layout_id == 4) {
+            binding.activityFullScreenImage.getRoot().setVisibility(View.VISIBLE);
         }
     }
 
@@ -308,6 +444,7 @@ public class DogProfileViewModel {
 
         return filePart;
     }
+
     private File compressFile(Uri imageUri, Context context) {
         File finalFile = null;
         try {
@@ -328,7 +465,6 @@ public class DogProfileViewModel {
         }
         return finalFile;
     }
-
 
 
 }

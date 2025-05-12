@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical">
 
 
-    <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    <androidx.cardview.widget.CardView
         android:id="@+id/registration_card"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/_10sdp"
@@ -113,30 +113,6 @@
                     android:textColor="@android:color/black"
                     android:textSize="18sp" />
             </RadioGroup>
-
-
-
-                <com.google.android.material.textfield.TextInputLayout
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/_50sdp"
-                    android:layout_marginHorizontal="40dp"
-                    android:layout_marginBottom="12dp"
-                    android:textColorHint="@color/light_grey"
-                    app:errorEnabled="true"
-                    android:inputType="text|textCapCharacters"
-                    app:hintTextColor="@color/light_grey"
-                    app:placeholderTextColor="@color/light_grey">
-
-                    <AutoCompleteTextView
-                        android:id="@+id/role"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="GENERAL CARGO"
-                        android:maxLength="100"
-                        android:textColor="@color/black" />
-                </com.google.android.material.textfield.TextInputLayout>
-
 
             <TextView
                 android:layout_width="wrap_content"

@@ -110,13 +110,13 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:layout_marginTop="@dimen/_5sdp">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
                 android:layout_marginTop="@dimen/_5sdp">
 
                 <LinearLayout
@@ -150,6 +150,16 @@
                         android:fontFamily="@font/manrope" />
 
                 </LinearLayout>
+
+                <Button
+                    android:id="@+id/edit_details"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:backgroundTint="@color/main_orange_color"
+                    android:text="EDIT">
+
+                </Button>
 
             </LinearLayout>
 

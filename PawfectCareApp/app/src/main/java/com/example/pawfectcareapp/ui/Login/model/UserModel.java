@@ -11,6 +11,7 @@ public class UserModel implements Serializable {
     String gender;
     int roleId;
     boolean isActive;
+    boolean readTc;
 
 
     public String getGender() {
@@ -67,5 +68,13 @@ public class UserModel implements Serializable {
 
     public void setRoleId(int roleId) {
         this.roleId = roleId;
+    }
+
+    public boolean isReadTc() {
+        return readTc;
+    }
+
+    public void setReadTc(boolean readTc) {
+        this.readTc = readTc;
     }
 }

@@ -47,7 +47,14 @@ public class AlbumImageListAdapter extends RecyclerView.Adapter<AlbumImageListAd
     public void onBindViewHolder(@NonNull AlbumImageListAdapter.ViewHolder holder, @SuppressLint("RecyclerView") int position) {
 
         String filename = imageList.get(position).getFilename();
+        String baseUrl = BuildConfig.API_BASE_URL;
+        String imageUrl = baseUrl + "dogs/images/" + filename;
+
         show_image(holder.image, filename);
+
+        holder.image.setOnClickListener(v -> {
+            mActivity.showImageInFullScreen(imageUrl);
+        });
     }
 
     @Override

@@ -8,11 +8,14 @@ import com.example.pawfectcareapp.API.ApiCall;
 import com.example.pawfectcareapp.API.ServiceGenerator;
 import com.example.pawfectcareapp.BuildConfig;
 import com.example.pawfectcareapp.Common.AlertsAndLoaders;
+import com.example.pawfectcareapp.Utils.SharedPref;
 import com.example.pawfectcareapp.databinding.ActivityDogProfileBinding;
 import com.example.pawfectcareapp.databinding.ActivityTeamBinding;
 import com.example.pawfectcareapp.ui.Dogs.model.DogProfileResponse;
 import com.example.pawfectcareapp.ui.Dogs.view.DogProfile;
 import com.example.pawfectcareapp.ui.FeedChart.model.FoodChartResponse;
+import com.example.pawfectcareapp.ui.Login.model.UserModel;
+import com.example.pawfectcareapp.ui.Login.model.UserResponse;
 import com.example.pawfectcareapp.ui.Team.model.TeamModel;
 import com.example.pawfectcareapp.ui.Team.model.TeamResponse;
 import com.example.pawfectcareapp.ui.Team.view.TeamActivity;
@@ -28,10 +31,14 @@ import retrofit2.Response;
 public class TeamViewModel {
 
     TeamResponse resp;
+    UserResponse uResp;
+    UserModel profile;
     List<TeamModel> teamList;
 
 
     public void getTeam(TeamActivity activity, Context context, ActivityTeamBinding binding, int user_id){
+        AlertsAndLoaders alert = new AlertsAndLoaders();
+        SweetAlertDialog sDialog = alert.showAlert(3, "Loading . . .", "Please wait", context, null);
         resp = new TeamResponse();
         ApiCall services = ServiceGenerator.createService(ApiCall.class, BuildConfig.API_UNAME, BuildConfig.API_PASS);
         Call<TeamResponse> call = services.getTeamList(user_id);
@@ -39,6 +46,7 @@ public class TeamViewModel {
             @Override
             public void onResponse(Call<TeamResponse> call, Response<TeamResponse> response) {
                 try {
+                    sDialog.cancel();
                     teamList = new ArrayList<>();
                     if (response.code() == 200) {
                         resp = response.body();
@@ -61,12 +69,14 @@ public class TeamViewModel {
 
 
                 } catch (Exception e) {
+                    sDialog.cancel();
                     e.printStackTrace();
                 }
             }
 
             @Override
             public void onFailure(Call<TeamResponse> call, Throwable t) {
+                sDialog.cancel();
                 Log.e("Error: ", t.getMessage());
             }
         });

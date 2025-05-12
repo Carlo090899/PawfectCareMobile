@@ -32,16 +32,20 @@ public class TaskViewModel {
     UserResponse uResp;
     List<TaskModel> taskList;
     List<UserModel> employees;
+    private SweetAlertDialog dialog;
 
     public void getTask(ActivityTaskBinding binding, TaskModule activity, Context context) {
+        AlertsAndLoaders alert =  new AlertsAndLoaders();
+        dialog = alert.showAlert(3,"Please wait", "", context, null);
         resp = new TaskResponse();
         SharedPref util = new SharedPref();
         ApiCall services = ServiceGenerator.createService(ApiCall.class, BuildConfig.API_UNAME, BuildConfig.API_PASS);
-        Call<TaskResponse> call = services.getTask(util.readPrefString(context, util.FULLNAME), Integer.valueOf(util.readPrefString(context, util.ROLE_ID)));
+        Call<TaskResponse> call = services.getTask(util.readPrefString(context, SharedPref.FULLNAME), Integer.valueOf(util.readPrefString(context, SharedPref.ROLE_ID)));
         call.enqueue(new Callback<TaskResponse>() {
             @Override
             public void onResponse(Call<TaskResponse> call, Response<TaskResponse> response) {
                 try {
+                    dialog.cancel();
                     taskList = new ArrayList<>();
                     if (response.code() == 200) {
                         resp = response.body();
@@ -64,26 +68,31 @@ public class TaskViewModel {
 
 
                 } catch (Exception e) {
+                    dialog.cancel();
                     e.printStackTrace();
                 }
             }
 
             @Override
             public void onFailure(Call<TaskResponse> call, Throwable t) {
+                dialog.cancel();
                 Log.e("Error: ", t.getMessage());
             }
         });
     }
 
     public void assignTask(TaskModule activity, Context context, String task_title, String task_desc, String employee) {
+        AlertsAndLoaders alert =  new AlertsAndLoaders();
+        dialog = alert.showAlert(3,"Please wait", "", context, null);
         resp = new TaskResponse();
         SharedPref util = new SharedPref();
         ApiCall services = ServiceGenerator.createService(ApiCall.class, BuildConfig.API_UNAME, BuildConfig.API_PASS);
-        Call<TaskResponse> call = services.assigntask(task_title, task_desc, employee, util.readPrefString(context, util.FULLNAME),Integer.valueOf(util.readPrefString(context, util.USER_ID)));
+        Call<TaskResponse> call = services.assigntask(task_title, task_desc, employee, util.readPrefString(context, SharedPref.FULLNAME),Integer.valueOf(util.readPrefString(context, SharedPref.USER_ID)));
         call.enqueue(new Callback<TaskResponse>() {
             @Override
             public void onResponse(Call<TaskResponse> call, Response<TaskResponse> response) {
                 try {
+                    dialog.cancel();
                     if (response.code() == 200) {
                         resp = response.body();
                         if (resp.getStatusCode() == 200) {
@@ -97,12 +106,14 @@ public class TaskViewModel {
 
 
                 } catch (Exception e) {
+                    dialog.cancel();
                     e.printStackTrace();
                 }
             }
 
             @Override
             public void onFailure(Call<TaskResponse> call, Throwable t) {
+                dialog.cancel();
                 Log.e("Error: ", t.getMessage());
             }
         });
@@ -151,6 +162,7 @@ public class TaskViewModel {
                             for (int i = 0; i < employees.size(); i++) {
                                 employee_arr.add(employees.get(i).getFullname());
                             }
+                            employee_arr.add("EVERYONE");
                         } else {
                             alertsAndLoaders.showAlert(2, "","No Employees Found", context, null);
                         }
@@ -216,9 +228,48 @@ public class TaskViewModel {
 
     public void deleteTask(Context context, TaskModule activity, int task_id) {
         AlertsAndLoaders alert = new AlertsAndLoaders();
-        SweetAlertDialog sDialog = alert.showAlert(3, "Loading . . .", "Saving please wait", context, null);
+        SweetAlertDialog sDialog = alert.showAlert(3, "Loading . . .", "Deleting please wait", context, null);
         ApiCall service = ServiceGenerator.createService(ApiCall.class, "", "");
         Call<TaskResponse> call = service.deleteTask(task_id);
+        call.enqueue(new Callback<TaskResponse>() {
+            @Override
+            public void onResponse(Call<TaskResponse> call, Response<TaskResponse> response) {
+
+                try {
+                    TaskResponse res = new TaskResponse();
+                    res = response.body();
+                    if (res.getStatusCode() == 200) {
+                        sDialog.cancel();
+                        AlertsAndLoaders alertsAndLoaders = new AlertsAndLoaders();
+                        alertsAndLoaders.showAlert(0, "", res.getMessage(), context, activity.backToTaskList);
+                    } else {
+                        sDialog.cancel();
+                        AlertsAndLoaders alertsAndLoaders = new AlertsAndLoaders();
+                        alertsAndLoaders.showAlert(1, "", res.getMessage(), context, activity.backToTaskList);
+                    }
+
+                } catch (Exception e) {
+                    sDialog.cancel();
+                    e.printStackTrace();
+                    AlertsAndLoaders alertsAndLoaders = new AlertsAndLoaders();
+                    alertsAndLoaders.showAlert(2, "", e.getMessage(), context, null);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<TaskResponse> call, Throwable t) {
+                sDialog.cancel();
+                AlertsAndLoaders alertsAndLoaders = new AlertsAndLoaders();
+                alertsAndLoaders.showAlert(2, "", t.getMessage(), context, null);
+            }
+        });
+
+    }
+    public void followUptask(Context context, TaskModule activity, int task_id) {
+        AlertsAndLoaders alert = new AlertsAndLoaders();
+        SweetAlertDialog sDialog = alert.showAlert(3, "Loading . . .", "Please wait", context, null);
+        ApiCall service = ServiceGenerator.createService(ApiCall.class, "", "");
+        Call<TaskResponse> call = service.followUpTask(task_id);
         call.enqueue(new Callback<TaskResponse>() {
             @Override
             public void onResponse(Call<TaskResponse> call, Response<TaskResponse> response) {

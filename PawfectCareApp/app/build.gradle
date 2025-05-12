@@ -25,7 +25,8 @@ android {
 
         buildConfigField "String","SECURED_PREFDEVICE_FIREBASE_TOKENS_KEY","\"${properties.getProperty("SECURED_PREFDEVICE_FIREBASE_TOKENS_KEY")}\""
         buildConfigField "String","DEVICE_FIREBASE_TOKEN","\"${properties.getProperty("DEVICE_FIREBASE_TOKEN")}\""
-        buildConfigField "String","HAS_NOTIFICATION_ASSIGN_TASK","\"${properties.getProperty("HAS_NOTIFICATION_GATE_IN")}\""
+        buildConfigField "String","HAS_NOTIFICATION_ASSIGN_TASK","\"${properties.getProperty("HAS_NOTIFICATION_ASSIGN_TASK")}\""
+        buildConfigField "String","HAS_NOTIFICATION_COMPLETE_TASK","\"${properties.getProperty("HAS_NOTIFICATION_COMPLETE_TASK")}\""
 
     }
 
@@ -48,6 +49,7 @@ android {
 
 dependencies {
 
+    implementation 'io.getstream:photoview:1.0.3'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.10.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'

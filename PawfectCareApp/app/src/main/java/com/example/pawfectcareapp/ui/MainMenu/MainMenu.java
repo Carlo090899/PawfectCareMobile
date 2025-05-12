@@ -9,6 +9,8 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.animation.AnimationUtils;
@@ -24,8 +26,13 @@ import com.example.pawfectcareapp.databinding.ActivityMainMenuBinding;
 import com.example.pawfectcareapp.ui.Dogs.view.DogProfile;
 import com.example.pawfectcareapp.ui.FeedChart.view.FoodChart;
 import com.example.pawfectcareapp.ui.Login.view.LoginPage;
+import com.example.pawfectcareapp.ui.MainMenu.viewModel.MainMenuViewModel;
 import com.example.pawfectcareapp.ui.Task.view.TaskModule;
 import com.example.pawfectcareapp.ui.Team.view.TeamActivity;
+import com.example.pawfectcareapp.ui.notificatioHelper.MyFirebaseMessagingService;
+
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 
 public class MainMenu extends AppCompatActivity {
 
@@ -34,6 +41,7 @@ public class MainMenu extends AppCompatActivity {
     CheckBox checkBox;
     boolean from_login = false;
     SharedPref utils;
+    MainMenuViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,21 +82,33 @@ public class MainMenu extends AppCompatActivity {
         setContentView(view);
 
         utils = new SharedPref();
+        viewModel = new MainMenuViewModel();
 
         startTimer();
 
-        from_login = getIntent().getBooleanExtra("from_login", false);
-        if(from_login){
-            showTermsAndConditions();
+        try {
+            if (!utils.secureReadPrefBoolean(MainMenu.this, String.valueOf(utils.IS_READ_TC))) {
+                showTermsAndConditions();
+            }
+        } catch (GeneralSecurityException | IOException e) {
+            e.printStackTrace();
+            showTermsAndConditions(); // or handle it appropriately
         }
     }
 
-    public void eventHandler(){
+    public void eventHandler() {
 
         binding.task.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 stopTimer();
+                if(Integer.valueOf(utils.readPrefString(MainMenu.this, SharedPref.ROLE_ID)) == 1){
+                    utils.writePrefString(MainMenu.this, BuildConfig.HAS_NOTIFICATION_COMPLETE_TASK, "false");
+                }else{
+                    utils.writePrefString(MainMenu.this, BuildConfig.HAS_NOTIFICATION_ASSIGN_TASK, "false");
+                }
+
+
                 Intent in = new Intent(MainMenu.this, TaskModule.class);
                 startActivity(in);
             }
@@ -161,6 +181,7 @@ public class MainMenu extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 dialog.cancel();
+                viewModel.hideTermsAndCondition(MainMenu.this);
             }
         });
 
@@ -168,6 +189,11 @@ public class MainMenu extends AppCompatActivity {
         dialog = builder.create();
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.setCanceledOnTouchOutside(false);
+
+        dialog.setOnKeyListener((dialogInterface, keyCode, event) -> {
+            return keyCode == KeyEvent.KEYCODE_BACK;
+        });
+
         dialog.show();
     }
 
@@ -188,19 +214,32 @@ public class MainMenu extends AppCompatActivity {
 
     public void afficher() {
         showNotification();
-        handler.postDelayed(runnable,1000);
+        handler.postDelayed(runnable, 1000);
     }
 
     public void showNotification() {
 
         if (utils.readPrefString(MainMenu.this, BuildConfig.HAS_NOTIFICATION_ASSIGN_TASK) == null || utils.readPrefString(MainMenu.this, BuildConfig.HAS_NOTIFICATION_ASSIGN_TASK).equals("false")) {
-//            notif_gate_in.setVisibility(View.GONE);
-        } else if(utils.readPrefString(MainMenu.this, BuildConfig.HAS_NOTIFICATION_ASSIGN_TASK).equals("true")){
-//            notif_gate_in.setVisibility(View.VISIBLE);
-//            notif_gate_in.setAnimation(AnimationUtils.loadAnimation(MainMenu.this, R.anim.shake_animation));
+            binding.notifTask.setVisibility(View.GONE);
+        } else if (utils.readPrefString(MainMenu.this, BuildConfig.HAS_NOTIFICATION_ASSIGN_TASK).equals("true")) {
+            if (Integer.valueOf(utils.readPrefString(MainMenu.this, SharedPref.ROLE_ID)) == 2) {
+                String notifState = utils.readPrefString(MainMenu.this, BuildConfig.HAS_NOTIFICATION_ASSIGN_TASK);
+                Log.d("NotifCheck1", "HAS_NOTIFICATION_ASSIGN_TASK = " + notifState);
+                binding.notifTask.setVisibility(View.VISIBLE);
+                binding.notifTask.setAnimation(AnimationUtils.loadAnimation(MainMenu.this, R.anim.shake_animation));
+            }
         }
 
-
+        if (utils.readPrefString(MainMenu.this, BuildConfig.HAS_NOTIFICATION_COMPLETE_TASK) == null || utils.readPrefString(MainMenu.this, BuildConfig.HAS_NOTIFICATION_COMPLETE_TASK).equals("false")) {
+            binding.notifTask.setVisibility(View.GONE);
+        } else if (utils.readPrefString(MainMenu.this, BuildConfig.HAS_NOTIFICATION_COMPLETE_TASK).equals("true")) {
+            if (Integer.valueOf(utils.readPrefString(MainMenu.this, SharedPref.ROLE_ID)) == 1) {
+                String notifState = utils.readPrefString(MainMenu.this, BuildConfig.HAS_NOTIFICATION_COMPLETE_TASK);
+                Log.d("NotifCheck2", "HAS_NOTIFICATION_COMPLETE_TASK = " + notifState);
+                binding.notifTask.setVisibility(View.VISIBLE);
+                binding.notifTask.setAnimation(AnimationUtils.loadAnimation(MainMenu.this, R.anim.shake_animation));
+            }
+        }
 
 
     }

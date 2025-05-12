@@ -81,8 +81,27 @@
 
                             <LinearLayout
                                 android:layout_width="match_parent"
-                                android:layout_height="@dimen/_12sdp"
+                                android:layout_height="20dp"
                                 android:gravity="right">
+
+                                <!--android:background="@drawable/green_circle_bg"-->
+                                <ImageView
+                                    android:id="@+id/notif_task"
+                                    android:layout_width="16dp"
+                                    android:layout_height="20dp"
+                                    android:layout_marginTop="1dp"
+                                    android:layout_marginRight="1dp"
+                                    android:gravity="center"
+                                    android:paddingRight="1dp"
+                                    android:src="@drawable/notification_bell"
+                                    android:text="1"
+                                    android:textStyle="italic"
+                                    android:visibility="gone"
+                                    app:autoSizeMaxTextSize="9sp"
+                                    app:autoSizeMinTextSize="5sp"
+                                    app:autoSizeStepGranularity="3sp"
+                                    app:autoSizeTextType="uniform" />
+
 
                             </LinearLayout>
 

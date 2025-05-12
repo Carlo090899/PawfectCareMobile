@@ -26,4 +26,9 @@
         android:id="@+id/album_content"
         layout="@layout/album_content"
         android:visibility="visible" />
+
+    <include
+        android:id="@+id/activity_full_screen_image"
+        layout="@layout/activity_full_screen_image"
+        android:visibility="visible" />
 </LinearLayout>

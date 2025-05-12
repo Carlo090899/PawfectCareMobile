@@ -32,8 +32,17 @@ public interface ApiCall {
     @POST("user/user_registration")
     Call<RegistrationResponse> saveRegistration(@Body RegistrationModel model);
 
+    @POST("user/resend_code")
+    Call<RegistrationResponse> resendCode(@Query("email") String email);
+
+    @POST("user/delete_registration")
+    Call<RegistrationResponse> deleteRegistration(@Query("email") String email);
+
     @POST("user/verify-email")
     Call<RegistrationResponse> activateUser(@Query("email") String email, @Query("otpCode") int otpCode);
+
+    @POST("user/hide_condition")
+    Call<UserResponse> hideCondition(@Query("id") int id);
 
 
     /*TASK API CALLS*/
@@ -54,28 +63,40 @@ public interface ApiCall {
     @POST("task/delete_task")
     Call<TaskResponse> deleteTask(@Query("task_id") int task_id);
 
+    @POST("task/follow_up_task")
+    Call<TaskResponse> followUpTask(@Query("task_id") int task_id);
+
     @Multipart
     @POST("dogs/save_dog_details")
     Call<DogProfileResponse> saveDogDetails(@Part List<MultipartBody.Part> file, @Query("dog_name") String dog_name, @Query("birthdate") String birthdate,
-                                            @Query("gender") String gender ,@Query("notes") String notes);
+                                            @Query("gender") String gender, @Query("notes") String notes);
+
+
+    @POST("dogs/edit_dog_details")
+    Call<DogProfileResponse> editDogDetails(@Query("dog_id") int dog_id, @Query("dog_name") String dog_name, @Query("birthdate") String birthdate, @Query("notes") String notes);
 
     @GET("dogs/get_dog_list")
     Call<DogProfileResponse> getDogList();
 
     @GET("dogs/get_image_list")
     Call<DogProfileResponse> getAlbumImage(@Query("dog_album_id") int dog_album_id);
+
     @GET("dogs/get_album")
     Call<DogProfileResponse> getAlbum(@Query("dog_id") int dog_id);
 
     @POST("dogs/save_album")
-    Call<DogProfileResponse> saveAlbumName(@Query("dog_id") int dog_id ,@Query("album_name") String album_name, @Query("user_id") int user_id);
+    Call<DogProfileResponse> saveAlbumName(@Query("dog_id") int dog_id, @Query("album_name") String album_name, @Query("user_id") int user_id);
+    @POST("dogs/edit_album")
+    Call<DogProfileResponse> editAlbumName(@Query("album_id") int album_id, @Query("album_name") String album_name);
+    @POST("dogs/delete_album")
+    Call<DogProfileResponse> deleteAlbum(@Query("album_id") int album_id);
 
     @Multipart
     @POST("dogs/save_album_image")
     Call<DogProfileResponse> saveAlbumImage(@Part List<MultipartBody.Part> file, @Query("dog_album_id") int dog_album_id, @Query("user_id") int user_id);
 
     @POST("foods/save_food")
-    Call<FoodChartResponse> saveDogFood(@Query("dog_id") int dog_id ,@Query("dog_food") String dog_food, @Query("food_desc") String food_desc, @Query("quantity") String quantity, @Query("user_id") int user_id);
+    Call<FoodChartResponse> saveDogFood(@Query("dog_id") int dog_id, @Query("dog_food") String dog_food, @Query("food_desc") String food_desc, @Query("quantity") String quantity, @Query("user_id") int user_id);
 
     @GET("foods/get_food")
     Call<FoodChartResponse> getFoods(@Query("dog_id") int dog_id);

@@ -38,6 +38,8 @@ public class FoodChartViewModel {
     FoodChartResponse resp;
 
     public void getDogList(FoodChart activity, Context context, ActivityFeedChartBinding binding){
+        AlertsAndLoaders alert =  new AlertsAndLoaders();
+        dialog = alert.showAlert(3,"Please wait", "", context, null);
         dogResp = new DogProfileResponse();
         ApiCall services = ServiceGenerator.createService(ApiCall.class, BuildConfig.API_UNAME, BuildConfig.API_PASS);
         Call<DogProfileResponse> call = services.getDogList();
@@ -45,6 +47,7 @@ public class FoodChartViewModel {
             @Override
             public void onResponse(Call<DogProfileResponse> call, Response<DogProfileResponse> response) {
                 try {
+                    dialog.cancel();
                     dogList = new ArrayList<>();
                     if (response.code() == 200) {
                         dogResp = response.body();
@@ -68,18 +71,22 @@ public class FoodChartViewModel {
 
 
                 } catch (Exception e) {
+                    dialog.cancel();
                     e.printStackTrace();
                 }
             }
 
             @Override
             public void onFailure(Call<DogProfileResponse> call, Throwable t) {
+                dialog.cancel();
                 Log.e("Error: ", t.getMessage());
             }
         });
     }
 
     public void getFoods(FoodChart activity, Context context, ActivityFeedChartBinding binding, int dog_id){
+        AlertsAndLoaders alert =  new AlertsAndLoaders();
+        dialog = alert.showAlert(3,"Please wait", "", context, null);
         resp = new FoodChartResponse();
         ApiCall services = ServiceGenerator.createService(ApiCall.class, BuildConfig.API_UNAME, BuildConfig.API_PASS);
         Call<FoodChartResponse> call = services.getFoods(dog_id);
@@ -87,6 +94,7 @@ public class FoodChartViewModel {
             @Override
             public void onResponse(Call<FoodChartResponse> call, Response<FoodChartResponse> response) {
                 try {
+                    dialog.cancel();
                     foodList = new ArrayList<>();
                     if (response.code() == 200) {
                         resp = response.body();
@@ -107,31 +115,36 @@ public class FoodChartViewModel {
 
 
                 } catch (Exception e) {
+                    dialog.cancel();
                     e.printStackTrace();
                 }
             }
 
             @Override
             public void onFailure(Call<FoodChartResponse> call, Throwable t) {
+                dialog.cancel();
                 Log.e("Error: ", t.getMessage());
             }
         });
     }
 
     public void saveDogFood(FoodChart activity, Context context, int dog_id, String dog_food, String food_desc, String quantity){
+        AlertsAndLoaders alert =  new AlertsAndLoaders();
+        dialog = alert.showAlert(3,"Please wait", "", context, null);
         resp = new FoodChartResponse();
         SharedPref util = new SharedPref();
         ApiCall services = ServiceGenerator.createService(ApiCall.class, BuildConfig.API_UNAME,BuildConfig.API_PASS);
-        Call<FoodChartResponse> call = services.saveDogFood(dog_id, dog_food,food_desc,quantity, Integer.valueOf(util.readPrefString(context, util.USER_ID)));
+        Call<FoodChartResponse> call = services.saveDogFood(dog_id, dog_food,food_desc,quantity, Integer.parseInt(util.readPrefString(context, SharedPref.USER_ID)));
         call.enqueue(new Callback<FoodChartResponse>() {
             @Override
             public void onResponse(Call<FoodChartResponse> call, Response<FoodChartResponse> response) {
                 try {
+                    dialog.cancel();
                     if (response.code() == 200) {
                         resp = response.body();
                         if (resp.getStatusCode() == 200) {
                             AlertsAndLoaders alertsAndLoaders = new AlertsAndLoaders();
-                            alertsAndLoaders.showAlert(0, "", "Album was successfully saved", context, activity.goToFoodChartDetails);
+                            alertsAndLoaders.showAlert(0, "", "Food was successfully added", context, activity.goToFoodChartDetails);
                         }else{
                             AlertsAndLoaders alert =  new AlertsAndLoaders();
                             alert.showAlert(2,"", resp.getMessage(), context, null);
@@ -140,12 +153,14 @@ public class FoodChartViewModel {
 
 
                 } catch (Exception e) {
+                    dialog.cancel();
                     e.printStackTrace();
                 }
             }
 
             @Override
             public void onFailure(Call<FoodChartResponse> call, Throwable t) {
+                dialog.cancel();
                 Log.e("Error: ", t.getMessage());
             }
         });
@@ -179,7 +194,7 @@ public class FoodChartViewModel {
 
     public void deleteFood(Context context, FoodChart activity, int food_id) {
         AlertsAndLoaders alert = new AlertsAndLoaders();
-        SweetAlertDialog sDialog = alert.showAlert(3, "Loading . . .", "Saving please wait", context, null);
+        SweetAlertDialog sDialog = alert.showAlert(3, "Please wait", "", context, null);
         ApiCall service = ServiceGenerator.createService(ApiCall.class, "", "");
         Call<FoodChartResponse> call = service.deleteFood(food_id);
         call.enqueue(new Callback<FoodChartResponse>() {

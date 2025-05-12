@@ -75,15 +75,15 @@ public class TeamActivity extends AppCompatActivity {
         listOfSearchTeam = new ArrayList<>();
         viewModel = new TeamViewModel();
 
-        if(util.readPrefString(TeamActivity.this, util.GENDER).equals("Male")){
+        if(util.readPrefString(TeamActivity.this, SharedPref.GENDER).equals("Male")){
             binding.teamList.avatar.setImageResource(R.drawable.man);
         }else{
             binding.teamList.avatar.setImageResource(R.drawable.woman);
         }
-        binding.teamList.name.setText(util.readPrefString(TeamActivity.this, util.FULLNAME));
-        viewModel.getTeam(TeamActivity.this, TeamActivity.this, binding, Integer.valueOf(util.readPrefString(TeamActivity.this, util.USER_ID)));
+        binding.teamList.name.setText(util.readPrefString(TeamActivity.this, SharedPref.FULLNAME));
+        viewModel.getTeam(TeamActivity.this, TeamActivity.this, binding, Integer.valueOf(util.readPrefString(TeamActivity.this, SharedPref.USER_ID)));
 
-        if(Integer.valueOf(util.readPrefString(TeamActivity.this, util.ROLE_ID)) == 2){
+        if(Integer.valueOf(util.readPrefString(TeamActivity.this, SharedPref.ROLE_ID)) == 2 || Integer.valueOf(util.readPrefString(TeamActivity.this, SharedPref.ROLE_ID)) == 3){
             binding.teamList.listView.setEnabled(false);
         }else{
             binding.teamList.listView.setEnabled(true);
@@ -118,7 +118,7 @@ public class TeamActivity extends AppCompatActivity {
 
     private void viewTeamList(Context context, TeamActivity activity, ActivityTeamBinding binding) {
         try {
-            TeamListAdapter adapter = new TeamListAdapter(context, activity, R.layout.team_list_line, searchTeam, Integer.valueOf(util.readPrefString(TeamActivity.this, util.ROLE_ID)));
+            TeamListAdapter adapter = new TeamListAdapter(context, activity, R.layout.team_list_line, searchTeam, Integer.valueOf(util.readPrefString(TeamActivity.this, SharedPref.ROLE_ID)));
             binding.teamList.listView.setAdapter(adapter);
         } catch (Exception e) {
             e.printStackTrace();
@@ -145,7 +145,7 @@ public class TeamActivity extends AppCompatActivity {
         @RequiresApi(api = Build.VERSION_CODES.O)
         @Override
         public void perform() {
-            viewModel.getTeam(TeamActivity.this, TeamActivity.this, binding,Integer.valueOf(util.readPrefString(TeamActivity.this, util.USER_ID)));
+            viewModel.getTeam(TeamActivity.this, TeamActivity.this, binding,Integer.valueOf(util.readPrefString(TeamActivity.this, SharedPref.USER_ID)));
         }
     };
 

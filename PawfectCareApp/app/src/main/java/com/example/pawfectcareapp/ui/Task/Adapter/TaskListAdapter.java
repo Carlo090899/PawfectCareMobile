@@ -47,11 +47,11 @@ public class TaskListAdapter extends ArrayAdapter<TaskModel> {
             TextView dateTime_txt = convertView.findViewById(R.id.dateTime);
             TextView status_txt = convertView.findViewById(R.id.status);
 
-//            if(status.contains("COMPLETED")){
-//                status_txt.setTextColor(Color.green(10));
-//            }else{
-//                status_txt.setTextColor(Color.red(10));
-//            }
+            if(status.contains("COMPLETED")){
+                status_txt.setTextColor(Color.GREEN);
+            }else{
+                status_txt.setTextColor(Color.RED);
+            }
 
             title_txt.setText(title);
             desc_txt.setText(desc);
